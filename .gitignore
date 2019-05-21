@@ -1,0 +1,4 @@
+.vscode/
+__pycache__/
+mrcnn/__pycache__/
+mask_rcnn_coco.h5
