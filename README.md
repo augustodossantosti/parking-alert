@@ -2,7 +2,7 @@
 
 Projeto responsável por analisar uma gravação em vídeo e identificar, via visão computacional e machine learning, vagas disponíveis em um estacionamento.
 
-Requisitos para execução
+Requisitos para execução:
 
 virtualenv
 
