@@ -8,11 +8,11 @@ virtualenv
 
 Criação do ambiente virtual:
 
-virtualenv <nome-do-ambiente>
+virtualenv [nome-do-ambiente]
   
 Ativação do ambiente virtual:
 
-source <nome-do-ambiente>/bin/activate
+source [nome-do-ambiente]/bin/activate
   
 Instalação das dependencias:
 
