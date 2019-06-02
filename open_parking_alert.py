@@ -5,6 +5,7 @@ import mrcnn.config
 import mrcnn.utils
 from mrcnn.model import MaskRCNN
 from pathlib import Path
+from datetime import datetime
 
 # Configuration that will be used by the Mask-RCNN library
 
@@ -67,11 +68,17 @@ class Analisador:
 
     def analisar(self) -> int:
 
+        vagas_econtradas = 0
+        inicio_verificacao = datetime.now()
+
         # Location of parking spaces
         parked_car_boxes = None
 
+        # Have we sent an SMS alert yet?
+        sms_sent = False
+
         # Loop over each frame of video
-        while self.video_capture.isOpened():
+        while (datetime.now() - inicio_verificacao).total_seconds() <= 120:
             success, frame = self.video_capture.read()
             if not success:
                 break
@@ -124,16 +131,19 @@ class Analisador:
                     # it by more than 0.15 using IoU
                     if max_IoU_overlap < 0.15:
                         # Parking space not occupied! Draw a green box around it
-                        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 3)
+                        cv2.rectangle(frame, (x1, y1),
+                                      (x2, y2), (0, 255, 0), 3)
                         # Flag that we have seen at least one open space
                         free_space = True
                     else:
                         # Parking space is still occupied - draw a red box around it
-                        cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 0, 255), 1)
+                        cv2.rectangle(frame, (x1, y1),
+                                      (x2, y2), (0, 0, 255), 1)
 
                     # Write the IoU measurement inside the box
                     font = cv2.FONT_HERSHEY_DUPLEX
-                    cv2.putText(frame, f"{max_IoU_overlap:0.2}", (x1 + 6, y2 - 6), font, 0.3, (255, 255, 255))
+                    cv2.putText(frame, f"{max_IoU_overlap:0.2}",
+                                (x1 + 6, y2 - 6), font, 0.3, (255, 255, 255))
 
                 # If at least one space was free, start counting frames
                 # This is so we don't alert based on one frame of a spot being open.
@@ -154,8 +164,7 @@ class Analisador:
                     # If we haven't sent an SMS yet, sent it!
                     if not sms_sent:
                         print("Vaga encontrada!!!")
-                        self.close_app()
-                        return 1
+                        vagas_econtradas += 1
 
                 # Show the frame of video on the screen
                 cv2.imshow('Video', frame)
@@ -163,6 +172,9 @@ class Analisador:
             # Hit 'q' to quit
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
+
+        self.close_app()
+        return vagas_econtradas
 
     def close_app(self):
 
