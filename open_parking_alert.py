@@ -40,7 +40,7 @@ class Analisador:
         IMAGE_DIR = os.path.join(ROOT_DIR, "images")
 
         # Video file or camera to process - set this to 0 to use your webcam instead of a video file
-        VIDEO_SOURCE = "test_images/parking-sd.mp4"
+        VIDEO_SOURCE = "test_images/parkingsd.gif"
 
         # Create a Mask-RCNN model in inference mode
         self.model = MaskRCNN(
@@ -149,13 +149,13 @@ class Analisador:
                 # This is so we don't alert based on one frame of a spot being open.
                 # This helps prevent the script triggered on one bad detection.
                 if free_space:
-                    free_space_frames += 1
+                    self.free_space_frames += 1
                 else:
                     # If no spots are free, reset the count
-                    free_space_frames = 0
+                    self.free_space_frames = 0
 
                 # If a space has been free for several frames, we are pretty sure it is really free!
-                if free_space_frames > 10:
+                if self.free_space_frames > 10:
                     # Write SPACE AVAILABLE!! at the top of the screen
                     font = cv2.FONT_HERSHEY_DUPLEX
                     cv2.putText(frame, f"SPACE AVAILABLE!", (10, 150),
