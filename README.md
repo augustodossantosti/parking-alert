@@ -4,7 +4,7 @@ Projeto responsável por analisar uma gravação em vídeo e identificar, via vi
 
 Requisitos para execução:
 
-    virtualenv
+    pip3 install virtualenv
 
 Criação do ambiente virtual:
 
